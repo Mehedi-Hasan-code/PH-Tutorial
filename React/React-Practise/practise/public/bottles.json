@@ -1,0 +1,53 @@
+[
+    {
+      "id": 1,
+      "brand": "Hydro Flask",
+      "weight": "400g",
+      "usage_duration": "5 years",
+      "life_span": "10 years",
+      "temperature_support": "Hot & Cold",
+      "capacity": "1L",
+      "image": "https://example.com/hydroflask.jpg"
+    },
+    {
+      "id": 2,
+      "brand": "Nalgene",
+      "weight": "180g",
+      "usage_duration": "10 years",
+      "life_span": "15 years",
+      "temperature_support": "Cold Only",
+      "capacity": "1L",
+      "image": "https://example.com/nalgene.jpg"
+    },
+    {
+      "id": 3,
+      "brand": "Contigo Autoseal",
+      "weight": "350g",
+      "usage_duration": "3 years",
+      "life_span": "7 years",
+      "temperature_support": "Hot & Cold",
+      "capacity": "750ml",
+      "image": "https://example.com/contigo.jpg"
+    },
+    {
+      "id": 4,
+      "brand": "CamelBak Chute",
+      "weight": "200g",
+      "usage_duration": "8 years",
+      "life_span": "12 years",
+      "temperature_support": "Cold Only",
+      "capacity": "750ml",
+      "image": "https://example.com/camelbak.jpg"
+    },
+    {
+      "id": 5,
+      "brand": "Stanley Classic",
+      "weight": "600g",
+      "usage_duration": "Lifetime",
+      "life_span": "Lifetime",
+      "temperature_support": "Hot & Cold",
+      "capacity": "1.2L",
+      "image": "https://example.com/stanley.jpg"
+    }
+  ]
+  
