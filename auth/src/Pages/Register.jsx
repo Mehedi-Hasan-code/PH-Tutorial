@@ -1,18 +1,19 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Components/Context/AuthContext";
 
 const Register = () => {
-  const {createUser} = useContext(AuthContext)
+  const navigate = useNavigate()
+  const { createUser } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleRegister = (e) => {
     e.preventDefault();
-    setErrorMessage('')
-    setSuccessMessage('')
-
+    setErrorMessage("");
+    setSuccessMessage("");
+    setShowLoader(true);
 
     // const name = e.target.name.value;
     const email = e.target.email.value;
@@ -21,10 +22,16 @@ const Register = () => {
     // firebase auth
     createUser(email, password)
       .then((userCredential) => {
-        setSuccessMessage('Success')
         console.log(userCredential);
+        setSuccessMessage("Success");
+        setShowLoader(false);
+        navigate('/profile')
+        
       })
-      .catch((err) => setErrorMessage(err.message));
+      .catch((err) => {
+        setErrorMessage(err.message);
+        setShowLoader(false);
+      });
   };
   return (
     <div className="hero bg-base-200 my-6">
@@ -58,15 +65,15 @@ const Register = () => {
               />
 
               <button type="submit" className="btn btn-neutral mt-4">
-                Register
+                {
+                  showLoader ? (<span className="loading loading-infinity loading-xl"></span>): ("Register")
+                }
               </button>
             </form>
-            {
-                errorMessage && <p className="text-red-500">{errorMessage}</p>
-            }
-            {
-                successMessage && <p className="text-green-500">{successMessage}</p>
-            }
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+            {successMessage && (
+              <p className="text-green-500">{successMessage}</p>
+            )}
             <p>
               Already have an account ?
               <Link className="text-blue-500 ml-1" to="/login">
