@@ -1,15 +1,42 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { AuthContext } from '../Context/AuthContext';
 
 const SignIn = () => {
-  const [loading, setLoading] = useState(false)
-  const [errorMessage, setErrorMessage] = useState('')
+  const { signInUser } = useContext(AuthContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    signInUser(email, password)
+      .then((result) => {
+        const signInInfo = {
+          email: result.user.email,
+          lastSignInTime: result.user?.metadata?.lastSignInTime
+        };
+        console.log(signInInfo);
+        // send to db
+        fetch('http://localhost:3000/users', {
+          method: "PATCH",    
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(signInInfo)
+        }).then(res => res.json())
+        .then(data => console.log(data))
+      })
+      .catch((err) => console.log(err.message));
+  };
   return (
-     <div className="grow flex justify-center items-center my-6 w-11/12 mx-auto">
+    <div className="grow flex justify-center items-center my-6 w-11/12 mx-auto">
       <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
         <div className="card-body">
           <h1 className="text-2xl text-center font-bold my-2">Login</h1>
-          <form className="fieldset">
+          <form onSubmit={handleSubmit} className="fieldset">
             <label className="label">Email</label>
             <input
               type="email"
@@ -29,12 +56,8 @@ const SignIn = () => {
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
-            {errorMessage && (
-              <p className="text-red-500 text-center mt-2">{errorMessage}</p>
-            )}
-            <button className="btn btn-neutral mt-4">
-              {loading ? <Loader /> : "Login"}
-            </button>
+
+            <button className="btn btn-neutral mt-4">Login</button>
           </form>
 
           {/* social login */}
@@ -62,15 +85,15 @@ const SignIn = () => {
             </button>
           </div>
           <p className="my-2 text-center">
-            Don't have an account ?{" "}
-            <Link className="text-blue-500" to={"/register"}>
+            Don't have an account ?{' '}
+            <Link className="text-blue-500" to={'/register'}>
               Register
-            </Link>{" "}
+            </Link>{' '}
           </p>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignIn
+export default SignIn;

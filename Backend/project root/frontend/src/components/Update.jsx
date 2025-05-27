@@ -10,7 +10,7 @@ const Update = () => {
 
     const updatedUser = { name, email };
 
-    fetch(`http://localhost:3000/${user._id}`, {
+    fetch(`http://localhost:3000/users/${user._id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

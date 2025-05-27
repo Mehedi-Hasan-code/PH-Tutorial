@@ -6,6 +6,8 @@ const Users = () => {
   const [users, setUsers] = useState(initialUsers);
   
   const handleDelete = (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this user?");
+    if (!isConfirmed) return;
     fetch(`http://localhost:3000/users/${id}`, {
       method: 'DELETE'
     }).then(res => res.json())
