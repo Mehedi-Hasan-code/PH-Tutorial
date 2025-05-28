@@ -16,9 +16,14 @@ const Links = () => {
       </li>
 
       {user ? (
+        <>
+        <li>
+          <NavLink to='/my-applications'>My Applications</NavLink>
+        </li>
         <li>
           <button onClick={handleLogOut}>Log out</button>
         </li>
+        </>
       ) : (
         <>
           <li>

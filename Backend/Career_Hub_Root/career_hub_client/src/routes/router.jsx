@@ -3,6 +3,9 @@ import Root from '../layouts/Root';
 import Home from '../pages/Home';
 import Register from '../pages/Register';
 import SignIn from '../pages/SignIn';
+import Apply from '../pages/Apply';
+import Details from '../pages/Details';
+import MyApplications from '../pages/MyApplications';
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +23,19 @@ export const router = createBrowserRouter([
       {
         path: 'signin',
         Component: SignIn
+      },
+      {
+        path: 'details/:id',
+        Component: Details,
+        loader: ({params}) => fetch(`${import.meta.env.VITE_IP}/jobs/${params.id}`)
+      },
+      {
+        path: 'apply/:id',
+        Component: Apply
+      },
+      {
+        path: '/my-applications',
+        Component: MyApplications
       }
     ],
   },
