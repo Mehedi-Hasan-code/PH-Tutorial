@@ -21,6 +21,9 @@ const Links = () => {
           <NavLink to='/my-applications'>My Applications</NavLink>
         </li>
         <li>
+          <NavLink to='/add-job'>Add jobs</NavLink>
+        </li>
+        <li>
           <button onClick={handleLogOut}>Log out</button>
         </li>
         </>

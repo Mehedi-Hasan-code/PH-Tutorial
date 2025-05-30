@@ -6,6 +6,7 @@ import SignIn from '../pages/SignIn';
 import Apply from '../pages/Apply';
 import Details from '../pages/Details';
 import MyApplications from '../pages/MyApplications';
+import AddJobs from '../pages/AddJobs';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: '/my-applications',
         Component: MyApplications
+      },
+      {
+        path: 'add-job',
+        Component: AddJobs
       }
     ],
   },
