@@ -6,7 +6,9 @@ const Home = () => {
   const [jobsPromise, setJobsPromise]  = useState(null)
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(`${import.meta.env.VITE_IP}/jobs`);
+      const res = await fetch(`${import.meta.env.VITE_IP}/jobs`, {
+        credentials: 'include'
+      });
       const data = await res.json();
       return data;
     };

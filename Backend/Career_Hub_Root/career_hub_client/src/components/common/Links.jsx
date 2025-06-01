@@ -24,6 +24,9 @@ const Links = () => {
           <NavLink to='/add-job'>Add jobs</NavLink>
         </li>
         <li>
+          <NavLink to={`/job-posts?email=${user.email}`}>Job posts</NavLink>
+        </li>
+        <li>
           <button onClick={handleLogOut}>Log out</button>
         </li>
         </>

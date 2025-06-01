@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth';
+import axios from 'axios';
 
 const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -21,14 +22,23 @@ const AuthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
   const logOut = () => {
-    setLoading(true)
-    return signOut(auth)
-  }
+    setLoading(true);
+    return signOut(auth);
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user || null);
+        if (user?.email) {
+          const userData = { email: user.email };
+          axios.post(`${import.meta.env.VITE_IP}/jwt`, userData, {
+            method: 'POST',
+            withCredentials: true
+          })
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err))
+        }
       }
       setLoading(false);
     });
@@ -44,9 +54,11 @@ const AuthProvider = ({ children }) => {
     signIn,
     user,
     setUser,
-    logOut
+    logOut,
   };
-  return <AuthContext.Provider value={AuthInfo}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={AuthInfo}>{children}</AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;

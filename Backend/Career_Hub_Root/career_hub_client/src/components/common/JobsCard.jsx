@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Details from '../../pages/Details';
 
 const JobsCard = ({job}) => {
-  console.log(job);
   const navigate = useNavigate()
   return (
     <div className="card bg-base-100 w-96 shadow-sm border py-6">
