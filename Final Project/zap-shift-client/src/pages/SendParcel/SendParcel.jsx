@@ -68,16 +68,16 @@ const SendParcel = () => {
               delivery_status: 'not_collected',
               payment_status: 'unpaid',
               tracking_id: generateTrackingId(),
+              cost: baseCost,
             };
             console.log('Saving to DB:', parcel);
-            publicApi.post('/parcel', parcel)
-            .then((data) => {
+            publicApi.post('/parcels', parcel).then((data) => {
               if (data.acknowledged === true && data.insertedId) {
                 toast.success('Parcel saved!');
                 reset();
                 // redirect ot payment page
               }
-            })
+            });
           }}
         >
           Confirm

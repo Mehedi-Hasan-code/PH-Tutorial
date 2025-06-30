@@ -19,6 +19,12 @@ const useAxiosSecure = () => {
   const privateApi = axios.create({
     baseURL: `${import.meta.env.VITE_BASE_API}`,
   });
+
+  privateApi.interceptors.response.use((res) => {
+    console.log(res.data);
+    return res.data;
+  });
+
   return { publicApi, privateApi };
 };
 
