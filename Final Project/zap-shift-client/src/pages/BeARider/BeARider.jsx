@@ -39,7 +39,7 @@ const BeARider = () => {
 
         privateApi.post('/riders', riderData)
             .then(res => {
-                if(res.data.insertedId){
+                if(res.insertedId){
                     Swal.fire({
                         icon: "success",
                         title: "Application Submitted!",

@@ -52,6 +52,9 @@ const Dashboard = () => {
           <li>
             <NavLink to="/dashboard/track">Track a parcel</NavLink>
           </li>
+          <li>
+            <NavLink to="pending-riders">Pending Riders</NavLink>
+          </li>
         </ul>
       </div>
     </div>

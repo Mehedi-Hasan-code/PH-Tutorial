@@ -11,6 +11,7 @@ import MyParcels from '../pages/Dashboard/MyParcels/Myparcels';
 import Payment from '../pages/Dashboard/Payment/Payment';
 import TrackParcel from '../pages/Dashboard/TrackParcel/TrackParcel';
 import BeARider from '../pages/BeARider/BeARider';
+import PendingRiders from '../pages/Dashboard/PendingRiders/PendingRiders';
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path: 'track',
         element: <TrackParcel />
+      },
+      {
+        path: 'pending-riders',
+        element: <PendingRiders />
       }
     ],
   },
