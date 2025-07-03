@@ -1,30 +1,36 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../hooks/apiClient/useAxiosSecure';
+import useAuthContext from '../../../hooks/useAuthContext';
 
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const navigate = useNavigate()
   const { privateApi } = useAxiosSecure();
-  const { id: parcelId } = useParams();
-  console.log(parcelId);
+  const { user } = useAuthContext();
 
+  const [error, setError] = useState('');
+
+  // get parcel info 👇
+  const { id: parcelId } = useParams();
   const { data: parcelInfo = {}, isLoading } = useQuery({
     queryKey: ['parcels', parcelId],
     queryFn: async () => privateApi.get(`parcels/${parcelId}`),
   });
 
-  const { cost } = parcelInfo;
+  const { cost } = parcelInfo || 0;
   const costInCent = cost * 100;
-  console.log(costInCent);
 
-  const [error, setError] = useState('');
+  // get parcel info 👆
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // get card element 👇
 
     if (!stripe || !elements) return;
 
@@ -44,7 +50,10 @@ const CheckoutForm = () => {
       console.log('paymentMethod:', paymentMethod);
     }
 
-    // create payment intent
+    // get card element 👆
+
+    // create payment intent 👇
+
     const res = await privateApi.post('/create-payment-intent', {
       cost: costInCent,
       parcelId,
@@ -53,29 +62,53 @@ const CheckoutForm = () => {
     const clientSecret = res.clientSecret;
     console.log(clientSecret);
 
+    // create payment intent 👆
+
+    // confirm payment 👇
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: elements.getElement(CardElement),
         billing_details: {
-          name: 'John Doe',
+          name: user.displayName,
+          email: user.email,
         },
       },
     });
 
+    console.log(result);
+
     if (result.error) {
+      setError('result.error.message');
       console.log(result.error.message);
     } else {
+      setError('');
       if (result.paymentIntent.status === 'succeeded') {
         console.log('Payment succeeded!');
+        // mark parcel paid also create payment history
+        console.log(result);
+        const paymentData = {
+          parcelId,
+          email: user.email,
+          cost,
+          transitionId: result.paymentIntent.id,
+          paymentMethod: result.paymentIntent.payment_method,
+        };
+
+        const paymentRes = await privateApi.post('/payments', paymentData);
+
+        if (paymentRes.insertedId) {
+          alert('Payment successful');
+          navigate('/dashboard/my-parcels')
+        } else {
+          alert('Something went wrong');
+        }
       }
     }
-
-    console.log('res from back: ', result);
   };
 
   if (isLoading) return <p>Loading...</p>;
 
-  console.log(parcelInfo);
+  // confirm payment 👆
 
   return (
     <form
@@ -86,7 +119,7 @@ const CheckoutForm = () => {
       <button type="submit" disabled={!stripe} className="w-full btn">
         Pay ${cost}
       </button>
-      {error && <p className="text-red-600">{error});</p>}
+      {error && <p className="text-red-600">{error}</p>}
     </form>
   );
 };

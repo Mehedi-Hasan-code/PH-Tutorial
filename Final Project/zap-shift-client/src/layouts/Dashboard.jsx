@@ -44,10 +44,13 @@ const Dashboard = () => {
           {/* Sidebar content here */}
           <ProFastLogo />
           <li>
-            <NavLink to='/dashboard'>Home</NavLink>
+            <NavLink to="/dashboard">Home</NavLink>
           </li>
           <li>
-            <NavLink to='/dashboard/my-parcels'>My Parcels</NavLink>
+            <NavLink to="/dashboard/my-parcels">My Parcels</NavLink>
+          </li>
+          <li>
+            <NavLink to="/dashboard/track">Track a parcel</NavLink>
           </li>
         </ul>
       </div>
