@@ -18,6 +18,9 @@ const NavLinks = () => {
       <li>
         <NavLink to="/send-parcel">Send Parcel</NavLink>
       </li>
+      <li>
+        <NavLink to="/be-a-rider">Be A Rider</NavLink>
+      </li>
       {user && (
         <>
           <li>

@@ -10,6 +10,7 @@ import Dashboard from '../layouts/Dashboard';
 import MyParcels from '../pages/Dashboard/MyParcels/Myparcels';
 import Payment from '../pages/Dashboard/Payment/Payment';
 import TrackParcel from '../pages/Dashboard/TrackParcel/TrackParcel';
+import BeARider from '../pages/BeARider/BeARider';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,11 @@ export const router = createBrowserRouter([
         path: 'coverage',
         element: <Coverage />,
         loader: async () => fetch('warehouses.json'),
+      },
+      {
+        path: 'be-a-rider',
+        element: <BeARider />,
+        loader: () => fetch('./warehouses.json')
       },
       {
         path: 'send-parcel',
