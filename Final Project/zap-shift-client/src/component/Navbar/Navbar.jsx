@@ -1,8 +1,10 @@
 import React from 'react';
 import NavLinks from './NavLinks';
 import ProFastLogo from '../common/ProFastLogo';
+import useAuthContext from '../../hooks/useAuthContext';
 
 const Navbar = () => {
+  const {signOutUser} = useAuthContext()
   return (
     <div className="navbar bg-base-100 shadow-sm">
       <div className="navbar-start">
@@ -41,7 +43,7 @@ const Navbar = () => {
         </ul>
       </div>
       <div className="navbar-end">
-        <button className="btn">Button</button>
+        <button onClick= { () => signOutUser()} className="btn">Logout</button>
       </div>
     </div>
   );

@@ -2,26 +2,33 @@ import { useState } from 'react';
 import useAxiosSecure from '../../../hooks/apiClient/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
+import useAuthContext from '../../../hooks/useAuthContext';
 
 const PendingRiders = () => {
+  const { user } = useAuthContext();
   const { privateApi } = useAxiosSecure();
   const [selectedRider, setSelectedRider] = useState(null);
-  const {
-    isPending,
-    data: riders = [],
-    refetch,
-  } = useQuery({
+  const { isPending, data, refetch } = useQuery({
     queryKey: ['pending-riders'],
     queryFn: async () => {
-      const res = await privateApi.get('/riders/pending');
-      return res;
+      try {
+        const res = await privateApi.get('/riders/pending');
+        return Array.isArray(res) ? res : [];
+      } catch (error) {
+        console.error('Error fetching pending riders:', error);
+        return [];
+      }
     },
+    initialData: [],
+    enabled: !!user?.accessToken,
   });
+
+  const riders = data || [];
 
   if (isPending) {
     return 'Loading...';
   }
-  const handleDecision = async (id, action) => {
+  const handleDecision = async (id, action, email) => {
     const confirm = await Swal.fire({
       title: `${action === 'approve' ? 'Approve' : 'Reject'} Application?`,
       icon: 'warning',
@@ -33,8 +40,10 @@ const PendingRiders = () => {
     if (!confirm.isConfirmed) return;
 
     try {
+      const status = action === 'approve' ? 'active' : 'rejected';
       await privateApi.patch(`/riders/${id}/status`, {
-        status: action === 'approve' ? 'active' : 'rejected',
+        status,
+        email,
       });
 
       refetch();
@@ -64,7 +73,7 @@ const PendingRiders = () => {
               </tr>
             </thead>
             <tbody>
-              {riders.map((rider) => (
+              {riders?.map((rider) => (
                 <tr key={rider._id}>
                   <td>{rider.name}</td>
                   <td>{rider.email}</td>
@@ -80,13 +89,17 @@ const PendingRiders = () => {
                       Details
                     </button>
                     <button
-                      onClick={() => handleDecision(rider._id, 'approve')}
+                      onClick={() =>
+                        handleDecision(rider._id, 'approve', rider.email)
+                      }
                       className="btn btn-sm btn-success"
                     >
                       Approve
                     </button>
                     <button
-                      onClick={() => handleDecision(rider._id, 'reject')}
+                      onClick={() =>
+                        handleDecision(rider._id, 'reject', rider.email)
+                      }
                       className="btn btn-sm btn-error"
                     >
                       Reject

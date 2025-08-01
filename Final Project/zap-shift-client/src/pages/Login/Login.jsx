@@ -1,10 +1,13 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import useAuthContext from '../../hooks/useAuthContext'
 
 const Login = () => {
+  const {signInUser} = useAuthContext()
   const {register, formState: { errors }, handleSubmit} = useForm()
   const onSubmit = data => {
-    console.log(data);
+    signInUser(data.email, data.password)
+      .then(res => console.log(res.user))
   }
   return (
      <div className="h-full flex items-center justify-center lg:justify-end w-full">

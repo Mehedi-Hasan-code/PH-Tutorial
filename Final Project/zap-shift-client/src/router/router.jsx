@@ -12,6 +12,14 @@ import Payment from '../pages/Dashboard/Payment/Payment';
 import TrackParcel from '../pages/Dashboard/TrackParcel/TrackParcel';
 import BeARider from '../pages/BeARider/BeARider';
 import PendingRiders from '../pages/Dashboard/PendingRiders/PendingRiders';
+import ActiveRiders from '../pages/Dashboard/ActiveRiders/ActiveRiders';
+import MakeAdmin from '../pages/Dashboard/PendingRiders/MakeAdmin';
+import Forbidden from '../pages/Forbidden/Forbidden';
+import AdminRoute from './AdminRoute';
+import AssignRider from '../pages/Dashboard/AssignRider/AssignRider';
+import PendingDeliveries from '../pages/Dashboard/PendingDeliveries/PendingDeliveries';
+import RiderRoute from './RiderRoute';
+import CompletedDeliveries from '../pages/Dashboard/CompletedDeliveries/CompletedDeliveries';
 
 export const router = createBrowserRouter([
   {
@@ -30,12 +38,16 @@ export const router = createBrowserRouter([
       {
         path: 'be-a-rider',
         element: <BeARider />,
-        loader: () => fetch('./warehouses.json')
+        loader: () => fetch('./warehouses.json'),
       },
       {
         path: 'send-parcel',
         element: <SendParcel />,
         loader: async () => fetch('warehouses.json'),
+      },
+      {
+        path: 'forbidden',
+        element: <Forbidden />,
       },
     ],
   },
@@ -67,12 +79,44 @@ export const router = createBrowserRouter([
       },
       {
         path: 'track',
-        element: <TrackParcel />
+        element: <TrackParcel />,
       },
       {
         path: 'pending-riders',
-        element: <PendingRiders />
-      }
+        element: <PendingRiders />,
+      },
+      {
+        path: 'active-riders',
+        element: <ActiveRiders />,
+      },
+      {
+        path: 'pending-deliveries',
+        element: (
+          <RiderRoute>
+            <PendingDeliveries />
+          </RiderRoute>
+        ),
+      },
+      {
+        path: 'completed-deliveries',
+        element: (
+          <RiderRoute>
+            <CompletedDeliveries />
+          </RiderRoute>
+        ),
+      },
+      {
+        path: 'make-admin',
+        element: (
+          <AdminRoute>
+            <MakeAdmin />
+          </AdminRoute>
+        ),
+      },
+      {
+        path: 'assign-rider',
+        element: <AssignRider />,
+      },
     ],
   },
 ]);

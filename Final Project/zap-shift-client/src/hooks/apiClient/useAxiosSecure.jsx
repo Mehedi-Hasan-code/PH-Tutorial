@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React from 'react';
 import useAuthContext from '../useAuthContext';
+import { useNavigate } from 'react-router';
 
 const useAxiosSecure = () => {
-  const { user } = useAuthContext();
+  const navigate = useNavigate();
+  const { user, signOutUser } = useAuthContext();
   // public api
   const publicApi = axios.create({
     baseURL: `${import.meta.env.VITE_BASE_API}`,
@@ -24,18 +26,35 @@ const useAxiosSecure = () => {
 
   privateApi.interceptors.request.use(
     (config) => {
-      config.headers.Authorization = `Bearer ${user.accessToken}`;
+      if (user?.accessToken) {
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+      }
       return config;
     },
     (error) => {
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   );
 
-  privateApi.interceptors.response.use((res) => {
-    console.log(res.data);
-    return res.data;
-  });
+  privateApi.interceptors.response.use(
+    (res) => {
+      console.log(res.data);
+      return res.data;
+    },
+    (error) => {
+      const status = error.response?.status;
+      if (status === 403) {
+        navigate('/forbidden');
+      } else if (status === 401) {
+        signOutUser()
+          .then(() => {
+            navigate('/login');
+          })
+          .catch(() => {});
+      }
+      return Promise.reject(error);
+    }
+  );
 
   return { publicApi, privateApi };
 };

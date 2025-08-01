@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 import dayjs from 'dayjs';
-import { useLoaderData } from 'react-router';
+import { useLoaderData, useNavigate } from 'react-router';
 import useAuthContext from '../../hooks/useAuthContext';
 import { v4 as uuidv4 } from 'uuid'; // 👈 import uuid
 import useAxiosSecure from '../../hooks/apiClient/useAxiosSecure';
@@ -12,6 +12,7 @@ const generateTrackingId = () => {
 };
 
 const SendParcel = () => {
+  const navigate = useNavigate()
   const { publicApi } = useAxiosSecure();
   const { user } = useAuthContext();
   const serviceCenterData = useLoaderData();
@@ -61,13 +62,14 @@ const SendParcel = () => {
           className="btn btn-sm btn-success mt-2"
           onClick={() => {
             toast.dismiss(t.id);
+            const tracking_id = generateTrackingId()
             const parcel = {
               ...formData,
               creation_date: dayjs().format(),
               created_by: user.email,
               delivery_status: 'not_collected',
               payment_status: 'unpaid',
-              tracking_id: generateTrackingId(),
+              tracking_id: tracking_id,
               cost: baseCost,
             };
             console.log('Saving to DB:', parcel);
@@ -76,6 +78,7 @@ const SendParcel = () => {
                 toast.success('Parcel saved!');
                 reset();
                 // redirect ot payment page
+                navigate('/dashboard/my-parcels')
               }
             });
           }}
